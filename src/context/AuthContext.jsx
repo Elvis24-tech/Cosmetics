@@ -12,29 +12,45 @@ const firebaseConfig = {
   measurementId: "G-7J0XD584PG"
 };
 
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Create context
 const AuthContext = createContext();
-
 export const useAuth = () => useContext(AuthContext);
+
+// Define your admin email
+const ADMIN_EMAIL = 'elvis@beautyshop.com';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        // If user is not logged in but visits /admin, auto-set admin
+        if (window.location.pathname === '/admin') {
+          setUser({ email: ADMIN_EMAIL }); // Fake user object for admin
+        }
+      }
       setLoading(false);
     });
+
+    return () => unsubscribe();
   }, []);
 
   const login = () => signInWithPopup(auth, new GoogleAuthProvider());
   const logout = () => signOut(auth);
 
+  const isAuthenticated = !!user;
+  const isAdmin = user?.email === ADMIN_EMAIL;
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isAdmin }}>
       {!loading && children}
     </AuthContext.Provider>
   );
