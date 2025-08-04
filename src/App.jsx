@@ -7,11 +7,11 @@ import Products from './pages/Products';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
-import AdminPage from './pages/AdminPage'; 
-import { useAuth } from './context/AuthContext'; 
+import AdminPage from './pages/AdminPage';
+import { useAuth } from './context/AuthContext';
 
 function App() {
-  const { isAdmin } = useAuth(); 
+  const { isAdmin, isAuthenticated } = useAuth();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -25,7 +25,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route
             path="/admin"
-            element={isAdmin ? <AdminPage /> : <Navigate to="/" replace />}
+            element={isAuthenticated && isAdmin ? <AdminPage /> : <Navigate to="/" replace />}
           />
         </Routes>
       </main>
