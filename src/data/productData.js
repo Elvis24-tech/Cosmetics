@@ -3,7 +3,7 @@ const products = [
     id: 1,
     name: "Velvet Matte Lipstick",
     price: 1200,
-    image: "https://images-na.ssl-images-amazon.com/images/I/41QCnyhBT6L.jpg",
+    image: "https://www.rasluxuryoils.com/cdn/shop/files/5_7543600e-2d39-41b5-992f-18b4d364706c.png?v=1708932476&width=1445",
     description: "Long-lasting matte lipstick with a soft velvet finish.",
     rating: 4.5,
   },

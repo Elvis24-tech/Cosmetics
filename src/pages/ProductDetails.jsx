@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import products from '../data/productData';
-import { useCart } from '../components/context/CartContext';
+import { useCart } from '../context/CartContext';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const [added, setAdded] = useState(false);
 
   if (!product) return <p className="text-center p-6">Product not found.</p>;
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    setAdded(true);
+
+    setTimeout(() => {
+      setAdded(false);
+    }, 2000);
+  };
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -29,10 +39,12 @@ const ProductDetails = () => {
           <p className="text-yellow-500 mt-2">⭐ {product.rating} / 5</p>
 
           <button
-            className="mt-4 bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600"
-            onClick={() => addToCart(product)}
+            className={`mt-4 px-6 py-2 rounded text-white ${
+              added ? 'bg-green-700 cursor-default' : 'bg-green-500 hover:bg-green-600'
+            }`}
+            onClick={!added ? handleAddToCart : undefined}
           >
-            Add to Cart
+            {added ? '✔ Added' : 'Add to Cart'}
           </button>
         </div>
       </div>

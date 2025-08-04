@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import products from '../data/productData';
-import { useCart } from '../components/context/CartContext';
+import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
+
+  const [addedProductIds, setAddedProductIds] = useState([]);
+
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    setAddedProductIds((prev) => [...prev, product.id]);
+
+    // Remove the added indicator after 2 seconds
+    setTimeout(() => {
+      setAddedProductIds((prev) => prev.filter((id) => id !== product.id));
+    }, 2000);
+  };
 
   return (
     <div className="p-8">
@@ -20,38 +32,42 @@ const Products = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
-        {products.map((product) => (
-          <div key={product.id} className="border p-4 rounded-lg shadow">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-48 object-cover rounded"
-            />
-            <h3 className="text-xl font-bold mt-3">{product.name}</h3>
-            <p className="text-gray-600">{product.description}</p>
-            <p className="mt-1 font-semibold">Ksh {product.price}</p>
-            <div className="mt-2 flex gap-2">
-              <button
-                className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
-                onClick={() => {
-                  console.log("Adding to cart:", product.name);
-                  addToCart(product);
-                }}
-              >
-                Add to Cart
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-                onClick={() => {
-                  console.log("Viewing product:", product.id);
-                  navigate(`/products/${product.id}`);
-                }}
-              >
-                View
-              </button>
+        {products.map((product) => {
+          const isAdded = addedProductIds.includes(product.id);
+
+          return (
+            <div key={product.id} className="border p-4 rounded-lg shadow">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-48 object-cover rounded"
+              />
+              <h3 className="text-xl font-bold mt-3">{product.name}</h3>
+              <p className="text-gray-600">{product.description}</p>
+              <p className="mt-1 font-semibold">Ksh {product.price}</p>
+
+              <div className="mt-2 flex gap-2">
+                <button
+                  className={`px-4 py-1 rounded text-white ${
+                    isAdded
+                      ? 'bg-green-700 cursor-default'
+                      : 'bg-green-500 hover:bg-green-600'
+                  }`}
+                  onClick={() => !isAdded && handleAddToCart(product)}
+                >
+                  {isAdded ? '✔ Added' : 'Add to Cart'}
+                </button>
+
+                <button
+                  className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+                  onClick={() => navigate(`/products/${product.id}`)}
+                >
+                  View
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
