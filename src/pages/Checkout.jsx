@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const Checkout = () => {
+  const location = useLocation();
+  const initialAmount = location.state?.total || 0;
+
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState('');
+  const [amount, setAmount] = useState(initialAmount);
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -14,7 +19,7 @@ const Checkout = () => {
     try {
       const res = await axios.post('http://127.0.0.1:8000/api/mpesa/stkpush/', {
         phone: phone,
-        amount: 10, // Update this to reflect actual cart total if needed
+        amount: amount,
       });
 
       if (res.data.CustomerMessage) {
@@ -22,6 +27,10 @@ const Checkout = () => {
       } else {
         setFeedback('Payment initiated. Check your phone.');
       }
+
+      // ✅ Clear phone and amount
+      setPhone('');
+      setAmount(0);
     } catch (err) {
       console.error(err);
       setFeedback('Failed to initiate payment. Please try again.');
@@ -33,6 +42,14 @@ const Checkout = () => {
   return (
     <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
       <h2 className="text-2xl font-bold mb-4 text-center text-green-700">Checkout</h2>
+
+      {amount > 0 ? (
+        <p className="text-center text-lg font-semibold mb-4 text-gray-800">
+          Total Amount: KES {amount}
+        </p>
+      ) : (
+        <p className="text-center text-md text-gray-500 italic mb-4">Payment complete</p>
+      )}
 
       <form onSubmit={handlePayment} className="space-y-4">
         <div>
@@ -51,7 +68,7 @@ const Checkout = () => {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || amount === 0}
           className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition duration-300"
         >
           {loading ? 'Processing...' : 'Pay with M-Pesa'}
