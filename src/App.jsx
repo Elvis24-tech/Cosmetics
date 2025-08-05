@@ -8,10 +8,17 @@ import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import AdminPage from './pages/AdminPage';
+import AdminAddProduct from './pages/admin/AdminAddProduct';
+import ManageProducts from './pages/admin/ManageProducts';
+import AdminOrders from './pages/admin/AdminOrders';
 import { useAuth } from './context/AuthContext';
 
 function App() {
   const { isAdmin, isAuthenticated } = useAuth();
+
+  const requireAdmin = (element) => {
+    return isAuthenticated && isAdmin ? element : <Navigate to="/" replace />;
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -23,10 +30,12 @@ function App() {
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route
-            path="/admin"
-            element={isAuthenticated && isAdmin ? <AdminPage /> : <Navigate to="/" replace />}
-          />
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={requireAdmin(<AdminPage />)} />
+          <Route path="/admin/add-product" element={requireAdmin(<AdminAddProduct />)} />
+          <Route path="/admin/manage-products" element={requireAdmin(<ManageProducts />)} />
+          <Route path="/admin/orders" element={requireAdmin(<AdminOrders />)} />
         </Routes>
       </main>
       <Footer />

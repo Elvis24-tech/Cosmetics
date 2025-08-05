@@ -1,9 +1,10 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const AdminPage = () => {
   const { isAuthenticated, isAdmin } = useAuth();
+  const navigate = useNavigate();
 
   if (!isAuthenticated || !isAdmin) {
     return <Navigate to="/" />;
@@ -14,32 +15,44 @@ const AdminPage = () => {
       <h1 className="text-3xl font-bold text-pink-600 mb-6">Admin Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Add Product */}
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Add New Product</h2>
           <p className="text-gray-600 mb-4">Create and list a new product in your store.</p>
-          <button className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded">
+          <button
+            onClick={() => navigate('/admin/add-product')}
+            className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded"
+          >
             Add Product
           </button>
         </div>
 
+        {/* Manage Products */}
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Manage Products</h2>
           <p className="text-gray-600 mb-4">Edit or delete existing products.</p>
-          <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+          <button
+            onClick={() => navigate('/admin/manage-products')}
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+          >
             Manage Products
           </button>
         </div>
 
+        {/* View Orders */}
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">View Orders</h2>
           <p className="text-gray-600 mb-4">See recent customer orders and update statuses.</p>
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+          <button
+            onClick={() => navigate('/admin/orders')}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+          >
             View Orders
           </button>
         </div>
       </div>
 
-      {/* Future stats section */}
+      {/* Quick Stats Section */}
       <div className="mt-10">
         <h3 className="text-2xl font-bold text-gray-700 mb-4">Quick Stats</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
