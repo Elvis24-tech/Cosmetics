@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Products = () => {
   const { addToCart } = useCart();
+  const { isAuthenticated, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [addedProductIds, setAddedProductIds] = useState([]);
@@ -18,11 +20,16 @@ const Products = () => {
         console.error('Error fetching products:', err);
       }
     };
-
     fetchProducts();
   }, []);
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = async (product) => {
+    if (!isAuthenticated) {
+      alert('Please log in to add items to cart.');
+      await loginWithGoogle(); 
+      return;
+    }
+
     addToCart(product);
     setAddedProductIds((prev) => [...prev, product.id]);
     setTimeout(() => {

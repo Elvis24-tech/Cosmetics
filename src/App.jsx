@@ -11,13 +11,15 @@ import AdminPage from './pages/AdminPage';
 import AdminAddProduct from './pages/admin/AdminAddProduct';
 import ManageProducts from './pages/admin/ManageProducts';
 import AdminOrders from './pages/admin/AdminOrders';
+import AdminLogin from './pages/AdminLogin'; 
 import { useAuth } from './context/AuthContext';
 
 function App() {
   const { isAdmin, isAuthenticated } = useAuth();
-
   const requireAdmin = (element) => {
-    return isAuthenticated && isAdmin ? element : <Navigate to="/" replace />;
+    if (!isAuthenticated) return <Navigate to="/admin-login" replace />;
+    if (!isAdmin) return <Navigate to="/" replace />;
+    return element;
   };
 
   return (
@@ -30,6 +32,7 @@ function App() {
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin" element={requireAdmin(<AdminPage />)} />
           <Route path="/admin/add-product" element={requireAdmin(<AdminAddProduct />)} />
           <Route path="/admin/manage-products" element={requireAdmin(<ManageProducts />)} />

@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, LogIn, LogOut } from 'lucide-react';
+import { ShoppingCart, LogIn, LogOut, LayoutDashboard } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const location = useLocation();
   const { cartItems } = useCart();
-  const { user, login, logout, isAuthenticated } = useAuth();
+  const { loginAsBuyer, logout, isAuthenticated, isAdmin } = useAuth();
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -27,20 +27,23 @@ const Navbar = () => {
   return (
     <header className="bg-white border-b shadow sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-        {/* Logo */}
-        <Link
-          to="/"
-          className="text-2xl font-extrabold text-pink-600 tracking-tight hover:text-pink-700"
-        >
+        <Link to="/" className="text-2xl font-extrabold text-pink-600 tracking-tight hover:text-pink-700">
           Beauty<span className="text-gray-800">Shop</span>
         </Link>
 
-        {/* Nav Links */}
         <nav className="flex items-center gap-4">
           {navLink('/', 'Home')}
           {navLink('/products', 'Products')}
 
-          {/* Cart Button */}
+          {isAdmin && (
+            navLink('/admin', (
+              <span className="flex items-center gap-1">
+                <LayoutDashboard size={18} />
+                Admin
+              </span>
+            ))
+          )}
+
           <Link
             to="/cart"
             className={`relative flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-md transition ${
@@ -58,7 +61,6 @@ const Navbar = () => {
             )}
           </Link>
 
-          {/* Auth Buttons */}
           {isAuthenticated ? (
             <button
               onClick={logout}
@@ -70,7 +72,7 @@ const Navbar = () => {
             </button>
           ) : (
             <button
-              onClick={login}
+              onClick={loginAsBuyer}
               className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
               title="Login"
             >

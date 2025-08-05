@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const { addToCart } = useCart();
+  const { isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
@@ -28,6 +30,12 @@ const ProductDetails = () => {
   }, [id]);
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      alert('Please log in to add items to cart.');
+      login();
+      return;
+    }
+
     addToCart(product);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
@@ -12,16 +19,12 @@ const firebaseConfig = {
   measurementId: "G-7J0XD584PG"
 };
 
-// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
-// Create context
+const ADMIN_EMAIL = 'elvis@beautyshop.com';
+const ADMIN_PASSWORD = 'adminpass'; 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
-
-// Define your admin email
-const ADMIN_EMAIL = 'elvis@beautyshop.com';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -29,28 +32,54 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        // If user is not logged in but visits /admin, auto-set admin
-        if (window.location.pathname === '/admin') {
-          setUser({ email: ADMIN_EMAIL }); // Fake user object for admin
-        }
-      }
+      setUser(currentUser || null);
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
+  const loginAsBuyer = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error('Google login error:', error);
+      alert('Buyer login failed. Please try again.');
+    }
+  };
+  const loginAsAdmin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_PASSWORD);
+    } catch (error) {
+      console.error('Admin login error:', error);
+      alert('Admin login failed. Check credentials.');
+    }
+  };
 
-  const login = () => signInWithPopup(auth, new GoogleAuthProvider());
-  const logout = () => signOut(auth);
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      console.log('User signed out.');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   const isAuthenticated = !!user;
   const isAdmin = user?.email === ADMIN_EMAIL;
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isAdmin }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        isAdmin,
+        loginAsBuyer,
+        loginAsAdmin,
+        logout,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );

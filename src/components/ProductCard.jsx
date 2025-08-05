@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const { isAuthenticated, login } = useAuth();
   const [isAdded, setIsAdded] = useState(false);
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      alert('Please log in to add to cart.');
+      login();
+      return;
+    }
+
     addToCart(product);    
     setIsAdded(true);           
-
-    setTimeout(() => {
-      setIsAdded(false);        
-    }, 2000);
+    setTimeout(() => setIsAdded(false), 2000);
   };
 
   return (
