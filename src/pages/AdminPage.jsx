@@ -1,10 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Navigate, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AdminPage = () => {
   const { isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
+
+  const [stats, setStats] = useState({
+    products: 0,
+    pendingOrders: 0,
+    completedSales: 0,
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const [productsRes, ordersRes] = await Promise.all([
+          axios.get('http://127.0.0.1:8000/api/products/'),
+          axios.get('http://127.0.0.1:8000/api/orders/'),
+        ]);
+
+        const totalProducts = productsRes.data.length;
+
+        const orders = ordersRes.data;
+        const pendingOrders = orders.filter(order => order.status === 'Pending').length;
+        const completedSales = orders.filter(order => order.status === 'Completed').length;
+
+        setStats({
+          products: totalProducts,
+          pendingOrders,
+          completedSales,
+        });
+      } catch (err) {
+        console.error('Failed to fetch admin stats:', err);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   if (!isAuthenticated || !isAdmin) {
     return <Navigate to="/" />;
@@ -46,20 +80,21 @@ const AdminPage = () => {
           </button>
         </div>
       </div>
+
       <div className="mt-10">
         <h3 className="text-2xl font-bold text-gray-700 mb-4">Quick Stats</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white p-4 rounded-lg shadow">
             <p className="text-sm text-gray-500">Total Products</p>
-            <p className="text-2xl font-bold text-pink-500">20</p>
+            <p className="text-2xl font-bold text-pink-500">{stats.products}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow">
             <p className="text-sm text-gray-500">Pending Orders</p>
-            <p className="text-2xl font-bold text-yellow-500">0</p>
+            <p className="text-2xl font-bold text-yellow-500">{stats.pendingOrders}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow">
             <p className="text-sm text-gray-500">Completed Sales</p>
-            <p className="text-2xl font-bold text-green-500">92</p>
+            <p className="text-2xl font-bold text-green-500">{stats.completedSales}</p>
           </div>
         </div>
       </div>
