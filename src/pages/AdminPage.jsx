@@ -15,7 +15,6 @@ const AdminPage = () => {
       <h1 className="text-3xl font-bold text-pink-600 mb-6">Admin Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Add Product */}
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Add New Product</h2>
           <p className="text-gray-600 mb-4">Create and list a new product in your store.</p>
@@ -26,8 +25,6 @@ const AdminPage = () => {
             Add Product
           </button>
         </div>
-
-        {/* Manage Products */}
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Manage Products</h2>
           <p className="text-gray-600 mb-4">Edit or delete existing products.</p>
@@ -38,8 +35,6 @@ const AdminPage = () => {
             Manage Products
           </button>
         </div>
-
-        {/* View Orders */}
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">View Orders</h2>
           <p className="text-gray-600 mb-4">See recent customer orders and update statuses.</p>
@@ -51,8 +46,6 @@ const AdminPage = () => {
           </button>
         </div>
       </div>
-
-      {/* Quick Stats Section */}
       <div className="mt-10">
         <h3 className="text-2xl font-bold text-gray-700 mb-4">Quick Stats</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

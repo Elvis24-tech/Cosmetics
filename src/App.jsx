@@ -30,8 +30,6 @@ function App() {
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-
-          {/* Admin Routes */}
           <Route path="/admin" element={requireAdmin(<AdminPage />)} />
           <Route path="/admin/add-product" element={requireAdmin(<AdminAddProduct />)} />
           <Route path="/admin/manage-products" element={requireAdmin(<ManageProducts />)} />

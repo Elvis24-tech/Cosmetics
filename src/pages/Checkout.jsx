@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; // 👈 import useCart
+import { useCart } from '../context/CartContext';
 
 const Checkout = () => {
   const location = useLocation();
@@ -12,7 +12,7 @@ const Checkout = () => {
   const [feedback, setFeedback] = useState('');
   const [amount, setAmount] = useState(initialAmount);
 
-  const { clearCart } = useCart(); // 👈 grab clearCart
+  const { clearCart } = useCart(); 
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -30,11 +30,9 @@ const Checkout = () => {
       } else {
         setFeedback('Payment initiated. Check your phone.');
       }
-
-      // ✅ Clear phone, amount, and cart
       setPhone('');
       setAmount(0);
-      clearCart(); // 👈 clear cart here
+      clearCart(); 
     } catch (err) {
       console.error(err);
       setFeedback('Failed to initiate payment. Please try again.');

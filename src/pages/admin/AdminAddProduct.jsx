@@ -15,7 +15,7 @@ const AdminAddProduct = () => {
     const { name, value, files } = e.target;
     setForm((prevForm) => ({
       ...prevForm,
-      [name]: files ? files[0] : value,  // Handle file uploads
+      [name]: files ? files[0] : value, 
     }));
   };
 

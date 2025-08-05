@@ -7,11 +7,11 @@ const ProductCard = ({ product }) => {
   const [isAdded, setIsAdded] = useState(false);
 
   const handleAddToCart = () => {
-    addToCart(product);         // Call context addToCart
-    setIsAdded(true);           // Set feedback state
+    addToCart(product);    
+    setIsAdded(true);           
 
     setTimeout(() => {
-      setIsAdded(false);        // Clear feedback after 2 sec
+      setIsAdded(false);        
     }, 2000);
   };
 

@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
-import products from '../data/productData';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
-
+  const [products, setProducts] = useState([]);
   const [addedProductIds, setAddedProductIds] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get('http://127.0.0.1:8000/api/products/');
+        setProducts(res.data);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const handleAddToCart = (product) => {
     addToCart(product);
     setAddedProductIds((prev) => [...prev, product.id]);
-
-    // Remove the added indicator after 2 seconds
     setTimeout(() => {
       setAddedProductIds((prev) => prev.filter((id) => id !== product.id));
     }, 2000);
@@ -34,7 +45,6 @@ const Products = () => {
       <div className="grid gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
         {products.map((product) => {
           const isAdded = addedProductIds.includes(product.id);
-
           return (
             <div key={product.id} className="border p-4 rounded-lg shadow">
               <img
