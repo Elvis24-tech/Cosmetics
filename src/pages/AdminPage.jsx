@@ -45,56 +45,64 @@ const AdminPage = () => {
   }
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-pink-600 mb-6">Admin Dashboard</h1>
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white p-8">
+      <h1 className="text-4xl font-extrabold text-pink-600 mb-10 text-center">
+        Admin Dashboard
+      </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Add New Product</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        {/* Add Product */}
+        <div className="bg-white rounded-2xl shadow-xl p-6 transition hover:scale-[1.02] hover:shadow-2xl">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Add New Product</h2>
           <p className="text-gray-600 mb-4">Create and list a new product in your store.</p>
           <button
             onClick={() => navigate('/admin/add-product')}
-            className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded"
+            className="bg-pink-500 hover:bg-pink-600 text-white px-5 py-2 rounded-lg transition"
           >
             Add Product
           </button>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Manage Products</h2>
+
+        {/* Manage Products */}
+        <div className="bg-white rounded-2xl shadow-xl p-6 transition hover:scale-[1.02] hover:shadow-2xl">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Manage Products</h2>
           <p className="text-gray-600 mb-4">Edit or delete existing products.</p>
           <button
             onClick={() => navigate('/admin/manage-products')}
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+            className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg transition"
           >
             Manage Products
           </button>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">View Orders</h2>
+
+        {/* View Orders */}
+        <div className="bg-white rounded-2xl shadow-xl p-6 transition hover:scale-[1.02] hover:shadow-2xl">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">View Orders</h2>
           <p className="text-gray-600 mb-4">See recent customer orders and update statuses.</p>
           <button
             onClick={() => navigate('/admin/orders')}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg transition"
           >
             View Orders
           </button>
         </div>
       </div>
 
-      <div className="mt-10">
-        <h3 className="text-2xl font-bold text-gray-700 mb-4">Quick Stats</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-sm text-gray-500">Total Products</p>
-            <p className="text-2xl font-bold text-pink-500">{stats.products}</p>
+      {/* Stats Section */}
+      <div>
+        <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">Quick Stats</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-white p-6 rounded-xl shadow-md text-center">
+            <p className="text-gray-500 text-sm mb-2">Total Products</p>
+            <p className="text-4xl font-bold text-pink-500">{stats.products}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-sm text-gray-500">Pending Orders</p>
-            <p className="text-2xl font-bold text-yellow-500">{stats.pendingOrders}</p>
+          <div className="bg-white p-6 rounded-xl shadow-md text-center">
+            <p className="text-gray-500 text-sm mb-2">Pending Orders</p>
+            <p className="text-4xl font-bold text-yellow-500">{stats.pendingOrders}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-sm text-gray-500">Completed Sales</p>
-            <p className="text-2xl font-bold text-green-500">{stats.completedSales}</p>
+          <div className="bg-white p-6 rounded-xl shadow-md text-center">
+            <p className="text-gray-500 text-sm mb-2">Completed Sales</p>
+            <p className="text-4xl font-bold text-green-500">{stats.completedSales}</p>
           </div>
         </div>
       </div>
