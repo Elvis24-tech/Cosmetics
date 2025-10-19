@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+// (Optional) Import a placeholder image for products that don't have one.
+// import placeholderImage from '../assets/placeholder.png'; 
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -44,6 +46,11 @@ const ProductDetails = () => {
   if (loading) return <p className="text-center p-6">Loading product...</p>;
   if (!product) return <p className="text-center p-6">Product not found.</p>;
 
+  // --- CHANGE IS HERE ---
+  // Determine the image source. Use the full URL from the API if it exists.
+  // Otherwise, you can use a placeholder. For now, we'll leave it blank ('').
+  const imageUrl = product.image_url ? product.image_url : ''; // Or use placeholderImage
+
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <button
@@ -54,10 +61,11 @@ const ProductDetails = () => {
       </button>
 
       <div className="grid md:grid-cols-2 gap-8">
+        {/* Use the new imageUrl variable. This will be the full Cloudinary URL. */}
         <img
-          src={`http://127.0.0.1:8000${product.image}`}
+          src={imageUrl}
           alt={product.name}
-          className="w-full rounded shadow"
+          className="w-full h-auto object-cover rounded shadow" // Added object-cover for better image scaling
         />
         <div>
           <h2 className="text-3xl font-bold text-pink-700">{product.name}</h2>

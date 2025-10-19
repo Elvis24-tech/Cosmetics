@@ -52,35 +52,52 @@ const Products = () => {
       <div className="grid gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
         {products.map((product) => {
           const isAdded = addedProductIds.includes(product.id);
+          const imageUrl = product.image_url || '';
+
           return (
-            <div key={product.id} className="border p-4 rounded-lg shadow">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-48 object-cover rounded"
-              />
-              <h3 className="text-xl font-bold mt-3">{product.name}</h3>
-              <p className="text-gray-600">{product.description}</p>
-              <p className="mt-1 font-semibold">Ksh {product.price}</p>
+            <div key={product.id} className="border p-4 rounded-lg shadow flex flex-col justify-between">
+              <div>
+                {/* --- CHANGES FOR BETTER IMAGE POSITIONING START HERE --- */}
+                
+                {/* 1. We create a container for the image and give it an aspect ratio. */}
+                {/* 'aspect-square' makes it a perfect square. You can also use 'aspect-video' (16:9) or 'aspect-[4/3]'. */}
+                <div className="w-full aspect-square overflow-hidden rounded">
+                  <img
+                    src={imageUrl}
+                    alt={product.name}
+                    // 2. The image now fills 100% of the container, preserving the clean grid.
+                    //    We removed 'h-48' and 'rounded' (moved to parent).
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                
+                {/* --- CHANGES END HERE --- */}
 
-              <div className="mt-2 flex gap-2">
-                <button
-                  className={`px-4 py-1 rounded text-white ${
-                    isAdded
-                      ? 'bg-green-700 cursor-default'
-                      : 'bg-green-500 hover:bg-green-600'
-                  }`}
-                  onClick={() => !isAdded && handleAddToCart(product)}
-                >
-                  {isAdded ? '✔ Added' : 'Add to Cart'}
-                </button>
+                <h3 className="text-xl font-bold mt-3">{product.name}</h3>
+                <p className="text-gray-600 text-sm mt-1 h-10 overflow-hidden">{product.description}</p>
+              </div>
+              
+              <div>
+                <p className="mt-2 font-semibold">Ksh {product.price}</p>
+                <div className="mt-2 flex gap-2">
+                  <button
+                    className={`px-4 py-1 rounded text-white ${
+                      isAdded
+                        ? 'bg-green-700 cursor-default'
+                        : 'bg-green-500 hover:bg-green-600'
+                    }`}
+                    onClick={() => !isAdded && handleAddToCart(product)}
+                  >
+                    {isAdded ? '✔ Added' : 'Add to Cart'}
+                  </button>
 
-                <button
-                  className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-                  onClick={() => navigate(`/products/${product.id}`)}
-                >
-                  View
-                </button>
+                  <button
+                    className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+                    onClick={() => navigate(`/products/${product.id}`)}
+                  >
+                    View
+                  </button>
+                </div>
               </div>
             </div>
           );
